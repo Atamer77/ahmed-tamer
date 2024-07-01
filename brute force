@@ -1,0 +1,40 @@
+import time
+
+# Given values
+n = 187  # Example modulus, which is the product of two primes
+e = 13   # Example public exponent
+
+def encrypt(message, public_key):
+    e, n = public_key
+    return pow(message, e, n)
+
+def decrypt(ciphertext, private_key):
+    d, n = private_key
+    return pow(ciphertext, d, n)
+start_time = time.time()
+
+# Brute-force method to find private key d
+d = 0
+for d in range(2, n):
+    if (e * d) % n == 1:
+        break
+else:
+    d = None
+
+end_time = time.time()
+
+if d:
+    print(f"Modulus (N): {n}")
+    print(f"Public key: (n={n}, e={e})")
+    print(f"Private key: (n={n}, d={d})")
+else:
+    print("Private key not found within the expected range.")
+
+print(f"Runtime: {(end_time - start_time) * 1000} milliseconds")
+
+message = int(input("Enter a message to encrypt (as an integer): "))
+encrypted = encrypt(message, (e, n))
+print(f"Encrypted message: {encrypted}")
+
+decrypted = decrypt(encrypted, (d, n))
+print(f"Decrypted message: {decrypted}")
